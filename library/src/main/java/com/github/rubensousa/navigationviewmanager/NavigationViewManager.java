@@ -77,8 +77,9 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
             mTitle = savedInstanceState.getString(CURRENT_TITLE);
             mCurrentFragment = mFragmentManager.findFragmentByTag(CURRENT_TITLE);
         } else {
-            if (intent != null) {
-                Bundle args = intent.getExtras();
+            mIntent = intent;
+            if (mIntent != null) {
+                Bundle args = mIntent.getExtras();
                 if (args != null) {
                     int menuId = args.getInt(NAVIGATE_ID);
                     onNavigationItemSelected(mNavigationView.getMenu().findItem(menuId));
