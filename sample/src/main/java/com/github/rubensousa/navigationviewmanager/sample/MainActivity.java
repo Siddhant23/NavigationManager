@@ -16,7 +16,9 @@
 
 package com.github.rubensousa.navigationviewmanager.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mNavigationViewManager = new NavigationViewManagerImpl(getSupportFragmentManager(),
-                navigationView, drawer);
+                navigationView, drawer, R.id.frameLayout);
 
         mNavigationViewManager.init(savedInstanceState, getIntent());
     }
@@ -70,5 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 mNavigationViewManager.openDrawer();
             }
         });
+    }
+
+    public void navigateWithIntent(@IdRes int item, Intent intent) {
+        mNavigationViewManager.navigateWithIntent(item, intent);
     }
 }

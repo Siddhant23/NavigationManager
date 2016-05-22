@@ -16,6 +16,7 @@
 
 package com.github.rubensousa.navigationviewmanager.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.rubensousa.navigationviewmanager.NavigationViewManager;
@@ -41,14 +43,6 @@ public class DummyFragment extends Fragment
     private String mTitle;
     private ActionMode mActionMode;
     private boolean mActionModeSuspended = false;
-
-    public static DummyFragment newInstance(String title) {
-        Bundle args = new Bundle();
-        args.putString(TITLE, title);
-        DummyFragment dummyFragment = new DummyFragment();
-        dummyFragment.setArguments(args);
-        return dummyFragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +62,13 @@ public class DummyFragment extends Fragment
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         TextView textView = (TextView) view.findViewById(R.id.textView);
         view.findViewById(R.id.actionModeButton).setOnClickListener(this);
+        Button button = (Button) view.findViewById(R.id.intentButton);
+        // Disable intent button if it's the import fragment
+        if (mTitle.equals("Import")) {
+            button.setVisibility(View.GONE);
+        } else {
+            button.setOnClickListener(this);
+        }
         textView.setText(mTitle);
 
         ((MainActivity) getActivity()).setupToolbar(toolbar);
@@ -121,6 +122,13 @@ public class DummyFragment extends Fragment
     public void onClick(View v) {
         if (v.getId() == R.id.actionModeButton) {
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
+        }
+
+        if (v.getId() == R.id.intentButton) {
+            // Change navigation fragments with a custom intent as argument
+            Intent intent = new Intent();
+            intent.putExtra("argument", "dummy");
+            ((MainActivity) getActivity()).navigateWithIntent(R.id.nav_import, intent);
         }
     }
 

@@ -16,44 +16,52 @@
 
 package com.github.rubensousa.navigationviewmanager.sample;
 
+import android.content.Intent;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.MenuItem;
 
 import com.github.rubensousa.navigationviewmanager.NavigationViewManager;
 
 public class NavigationViewManagerImpl extends NavigationViewManager {
 
-    private FragmentManager mFragmentManager;
-
     public NavigationViewManagerImpl(FragmentManager fragmentManager, NavigationView navigationView,
-                                     DrawerLayout drawerLayout) {
-        super(fragmentManager, navigationView, drawerLayout);
-        mFragmentManager = fragmentManager;
+                                     DrawerLayout drawerLayout, @IdRes int containerId) {
+        super(fragmentManager, navigationView, drawerLayout, containerId);
     }
 
     @Override
     public void showDefaultItem(NavigationView navigationView) {
-        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_camera));
+        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_import));
     }
 
+    @NonNull
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        if (super.onNavigationItemSelected(item)) {
-            Fragment currentFragment = DummyFragment.newInstance(item.getTitle().toString());
+    public Fragment createFragment(@IdRes int item) {
+        Fragment fragment;
 
-            if (currentFragment != null) {
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, currentFragment, CURRENT_TITLE)
-                        .commit();
-
-                setCurrentFragment(currentFragment);
-            }
-
-            return true;
+        switch (item) {
+            // Add your other cases here
+            default:
+                fragment = new DummyFragment();
         }
-        return false;
+
+        // Set some custom arguments
+        Intent args = new Intent();
+        args.putExtra(DummyFragment.TITLE, getCurrentTitle());
+        fragment.setArguments(args.getExtras());
+        return fragment;
     }
+
+    /* Override this to create your custom fragment transactions
+    @Override
+    public FragmentTransaction createFragmentTransaction(Fragment fragment) {
+        return mFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout,fragment,CURRENT_TITLE)
+                .addToBackStack(null);
+    }*/
+
 }

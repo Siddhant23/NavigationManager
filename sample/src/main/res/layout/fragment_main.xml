@@ -39,6 +39,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start actionMode" />
+
+        <Button
+            android:id="@+id/intentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Navigate with intent" />
     </LinearLayout>
 
 

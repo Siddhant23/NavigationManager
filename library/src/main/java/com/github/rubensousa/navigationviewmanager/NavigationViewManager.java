@@ -16,9 +16,12 @@
 
 package com.github.rubensousa.navigationviewmanager;
 
+import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,15 +47,18 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
     private NavigationListener mNavigationListener;
     private ActionModeListener mActionModeListener;
     private FragmentManager mFragmentManager;
+    private Intent mIntent;
     private Fragment mCurrentFragment;
+    private int mContainerId;
     private int mCurrentId;
     private String mTitle;
 
     public NavigationViewManager(FragmentManager fragmentManager, NavigationView navigationView,
-                                 DrawerLayout drawerLayout) {
+                                 DrawerLayout drawerLayout, @IdRes int containerId) {
         mFragmentManager = fragmentManager;
         mNavigationView = navigationView;
         mDrawerLayout = drawerLayout;
+        mContainerId = containerId;
         mDrawerLayout.addDrawerListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
@@ -95,6 +101,9 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
     public abstract void showDefaultItem(NavigationView navigationView);
 
+    @NonNull
+    public abstract Fragment createFragment(@IdRes int item);
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         if (mNavigationListener != null) {
@@ -110,8 +119,25 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         mCurrentId = item.getItemId();
         mTitle = item.getTitle().toString();
 
+        // If an item is checkable, then a fragment should be used
         if (item.isCheckable()) {
             item.setChecked(true);
+            mCurrentFragment = createFragment(item.getItemId());
+
+            // Check if we have an Intent to pass to the fragment
+            if (mIntent != null) {
+                Bundle args = mCurrentFragment.getArguments();
+                Bundle extras = mIntent.getExtras();
+
+                // Add the fragment's arguments to the new Intent
+                if (args != null) {
+                    args.putAll(extras);
+                }
+                mCurrentFragment.setArguments(args);
+                mIntent = null;
+            }
+
+            createFragmentTransaction(mCurrentFragment).commit();
             return true;
         }
 
@@ -170,20 +196,17 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
     }
 
-    public void showItem(@IdRes int menuId) {
+    public void navigateWithIntent(@IdRes int menuId, Intent intent) {
+        mIntent = intent;
+        navigate(menuId);
+    }
+
+    public void navigate(@IdRes int menuId) {
         if (mCurrentId != menuId) {
             MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
             lastItem.setChecked(false);
-            MenuItem item = mNavigationView.getMenu().findItem(menuId);
-            if (item.isCheckable()) {
-                item.setChecked(true);
-            }
-            onNavigationItemSelected(item);
+            onNavigationItemSelected(mNavigationView.getMenu().findItem(menuId));
         }
-    }
-
-    public void setCurrentFragment(Fragment fragment) {
-        mCurrentFragment = fragment;
     }
 
     public int getCurrentId() {
@@ -194,8 +217,13 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         return mTitle;
     }
 
+    @SuppressLint("CommitTransaction")
+    public FragmentTransaction createFragmentTransaction(Fragment fragment) {
+        return mFragmentManager.beginTransaction()
+                .replace(mContainerId, fragment, CURRENT_TITLE);
+    }
+
     public void onDestroy() {
-        mFragmentManager = null;
         mDrawerLayout.removeDrawerListener(this);
         mNavigationView.setNavigationItemSelectedListener(null);
     }
