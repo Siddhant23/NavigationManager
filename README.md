@@ -1,5 +1,5 @@
 # NavigationViewManager
-A simple helper library for NavigationView to help manage navigation logic and reduce boilerplate in your MainActivity.
+A simple helper library to separate navigation logic from your MainActivity and reduce boilerplate.
 
 It also includes ActionMode flow control when the NavigationView is shown/hidden.
 
@@ -30,29 +30,30 @@ dependencies {
 ```java
 @Override
 public void showDefaultItem(NavigationView navigationView) {
-    onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_camera));
+    onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_import));
 }
 ```
 
-#####3. Override onNavigationItemSelected to replace your content fragments.
+##### 3. Implement createFragment to replace your content fragments.
 
 ```java
+@NonNull
 @Override
-public boolean onNavigationItemSelected(MenuItem item) {
-    if (super.onNavigationItemSelected(item)) {
-        Fragment currentFragment = DummyFragment.newInstance(item.getTitle().toString());
+public Fragment createFragment(@IdRes int item) {
+    Fragment fragment = null;
 
-        if (currentFragment != null) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, currentFragment, CURRENT_TITLE)
-                    .commit();
-
-            setCurrentFragment(currentFragment);
-        }
-
-        return true;
+    switch (item) {
+        case R.id.nav_import:
+            fragment = new ImportFragment();
+            break;
+        case R.id.nav_gallery:
+            fragment = new GalleryFragment();
+            break;
+        default:
+            fragment = new DummyFragment();
     }
-    return false;
+    
+    return fragment;
 }
 ```
 
@@ -69,7 +70,7 @@ protected void onCreate(Bundle savedInstanceState) {
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     mNavigationViewManager = new NavigationViewManagerImpl(getSupportFragmentManager(),
-            navigationView, drawer);
+            navigationView, drawer,R.id.containerLayout);
 
     mNavigationViewManager.init(savedInstanceState, getIntent());
 }
@@ -94,6 +95,24 @@ public void onBackPressed() {
 }
 ```
 
+##### 5. (Optional) Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
+
+```java
+@Override
+public FragmentTransaction createFragmentTransaction(Fragment fragment) {
+    return mFragmentManager.beginTransaction()
+            .replace(R.id.frameLayout,fragment,CURRENT_TITLE)
+            .addToBackStack(null);
+}
+```
+The default transaction is:
+
+```java
+public FragmentTransaction createFragmentTransaction(Fragment fragment) {
+    return mFragmentManager.beginTransaction()
+            .replace(mContainerId, fragment, CURRENT_TITLE);
+}
+```
 ## License
 
     Copyright 2016 Rúben Sousa
