@@ -17,7 +17,7 @@ repositories{
 }
 
 dependencies {
-    compile 'com.github.rubensousa:NavigationViewManager:0.1'
+    compile 'com.github.rubensousa:NavigationViewManager:0.3'
 }
 ```
 
@@ -75,10 +75,18 @@ protected void onCreate(Bundle savedInstanceState) {
     mNavigationViewManager.init(savedInstanceState, getIntent());
 }
 
+// This is useful to navigate when you receive an intent
+// from a push notification
+@Override
+protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    mNavigationViewManager.navigateWithIntent(intent);
+}
+
 @Override
 protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    mNavigationViewManager.saveNavigationState(outState);
+    mNavigationViewManager.onSaveInstanceState(outState);
 }
 
 @Override
@@ -95,7 +103,17 @@ public void onBackPressed() {
 }
 ```
 
-##### 5. (Optional) Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
+##### 5. To navigate with Intents:
+
+```java
+Intent intent = NavigationViewManager.createNavigationIntent(R.id.menuId);
+intent.putExtra("argument", "dummy");
+mNavigationViewManager.navigateWithIntent(intent);
+```
+
+The intent will be automatically passed to your fragment
+
+##### 6. (Optional) Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
 
 ```java
 @Override
