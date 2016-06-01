@@ -45,9 +45,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mNavigationViewManager.navigateWithIntent(intent);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mNavigationViewManager.saveNavigationState(outState);
+        mNavigationViewManager.onSaveInstanceState(outState);
     }
 
     @Override
@@ -74,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void navigateWithIntent(@IdRes int item, Intent intent) {
-        mNavigationViewManager.navigateWithIntent(item, intent);
+    public void navigateWithIntent(Intent intent) {
+        mNavigationViewManager.navigateWithIntent(intent);
+    }
+
+    public void navigate(@IdRes int menuId) {
+        mNavigationViewManager.navigate(menuId);
     }
 }

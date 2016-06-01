@@ -126,9 +126,9 @@ public class DummyFragment extends Fragment
 
         if (v.getId() == R.id.intentButton) {
             // Change navigation fragments with a custom intent as argument
-            Intent intent = new Intent();
+            Intent intent = NavigationViewManager.createNavigationIntent(R.id.nav_import);
             intent.putExtra("argument", "dummy");
-            ((MainActivity) getActivity()).navigateWithIntent(R.id.nav_import, intent);
+            ((MainActivity) getActivity()).navigateWithIntent(intent);
         }
     }
 

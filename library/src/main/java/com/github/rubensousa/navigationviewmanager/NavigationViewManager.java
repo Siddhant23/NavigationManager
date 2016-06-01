@@ -78,32 +78,65 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
             mCurrentFragment = mFragmentManager.findFragmentByTag(CURRENT_TITLE);
         } else {
             mIntent = intent;
-            if (mIntent != null) {
+            if (mIntent == null) {
+                showDefaultItem(mNavigationView);
+            } else {
                 Bundle args = mIntent.getExtras();
                 if (args != null) {
                     int menuId = args.getInt(NAVIGATE_ID);
-                    onNavigationItemSelected(mNavigationView.getMenu().findItem(menuId));
+                    MenuItem item = mNavigationView.getMenu().findItem(menuId);
+                    if (item != null) {
+                        onNavigationItemSelected(item);
+                    }
                 } else {
                     showDefaultItem(mNavigationView);
                 }
-            } else {
-                showDefaultItem(mNavigationView);
             }
         }
     }
 
-    public void setActionModeListener(ActionModeListener actionModeListener) {
-        mActionModeListener = actionModeListener;
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CURRENT_ID, mCurrentId);
+        outState.putString(CURRENT_TITLE, mTitle);
     }
 
-    public void setNavigationListener(NavigationListener navigationListener) {
-        mNavigationListener = navigationListener;
+    public void onDestroy() {
+        mDrawerLayout.removeDrawerListener(this);
+        mNavigationView.setNavigationItemSelectedListener(null);
     }
 
     public abstract void showDefaultItem(NavigationView navigationView);
 
     @NonNull
     public abstract Fragment createFragment(@IdRes int item);
+
+    /**
+     * Navigate via Intent. The intent must contain a NAVIGATE_ID field with the menu id of the
+     * section desired to navigate to.
+     *
+     * @param intent Intent to be passed to the new fragment
+     */
+    public void navigateWithIntent(Intent intent) {
+        mIntent = intent;
+        if (mIntent != null) {
+            Bundle args = mIntent.getExtras();
+            if (args != null) {
+                int menuId = args.getInt(NAVIGATE_ID);
+                navigate(menuId);
+            }
+        }
+    }
+
+    public void navigate(@IdRes int menuId) {
+        if (mCurrentId != menuId) {
+            MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
+            lastItem.setChecked(false);
+            MenuItem newItem = mNavigationView.getMenu().findItem(menuId);
+            if (newItem != null) {
+                onNavigationItemSelected(newItem);
+            }
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -131,7 +164,7 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                 Bundle extras = mIntent.getExtras();
 
                 // Add the fragment's arguments to the new Intent
-                if (args != null) {
+                if (args != null && extras != null) {
                     args.putAll(extras);
                 }
                 mCurrentFragment.setArguments(args);
@@ -197,19 +230,6 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
     }
 
-    public void navigateWithIntent(@IdRes int menuId, Intent intent) {
-        mIntent = intent;
-        navigate(menuId);
-    }
-
-    public void navigate(@IdRes int menuId) {
-        if (mCurrentId != menuId) {
-            MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
-            lastItem.setChecked(false);
-            onNavigationItemSelected(mNavigationView.getMenu().findItem(menuId));
-        }
-    }
-
     public int getCurrentId() {
         return mCurrentId;
     }
@@ -218,15 +238,18 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         return mTitle;
     }
 
+    public void setActionModeListener(ActionModeListener actionModeListener) {
+        mActionModeListener = actionModeListener;
+    }
+
+    public void setNavigationListener(NavigationListener navigationListener) {
+        mNavigationListener = navigationListener;
+    }
+
     @SuppressLint("CommitTransaction")
     public FragmentTransaction createFragmentTransaction(Fragment fragment) {
         return mFragmentManager.beginTransaction()
                 .replace(mContainerId, fragment, CURRENT_TITLE);
-    }
-
-    public void onDestroy() {
-        mDrawerLayout.removeDrawerListener(this);
-        mNavigationView.setNavigationItemSelectedListener(null);
     }
 
     public boolean openDrawer() {
@@ -245,14 +268,15 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         return false;
     }
 
-    public void saveNavigationState(Bundle outState) {
-        outState.putInt(CURRENT_ID, mCurrentId);
-        outState.putString(CURRENT_TITLE, mTitle);
-    }
-
     public static void saveActionModeState(Bundle outState, ActionModeListener callbacks) {
         outState.putBoolean(ACTION_MODE_SUSPENDED, callbacks.isActionModeSuspended());
         outState.putBoolean(ACTION_MODE_ACTIVE, callbacks.isActionModeActive());
+    }
+
+    public static Intent createNavigationIntent(@IdRes int res) {
+        Intent intent = new Intent();
+        intent.putExtra(NAVIGATE_ID, res);
+        return intent;
     }
 
     public interface NavigationListener {
