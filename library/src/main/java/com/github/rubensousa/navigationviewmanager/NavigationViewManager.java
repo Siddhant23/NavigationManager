@@ -230,6 +230,10 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
     }
 
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
+    }
+
     public int getCurrentId() {
         return mCurrentId;
     }
