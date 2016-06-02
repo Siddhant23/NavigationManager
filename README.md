@@ -131,6 +131,68 @@ public FragmentTransaction createFragmentTransaction(Fragment fragment) {
             .replace(mContainerId, fragment, CURRENT_TITLE);
 }
 ```
+## ActionMode pausing/resuming
+
+When the NavigationView opens, you should finish or at least pause the ActionMode.
+To do this, you can implement NavigationViewManager.ActionModeListener in your fragments and then:
+
+```java
+private ActionMode mActionMode;
+private boolean mActionModeSuspended = false;
+
+@Nullable
+@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    // ...
+    
+    if (savedInstanceState != null) {
+        mActionModeSuspended
+                = savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_SUSPENDED);
+
+        // Restore action mode state if it was active before
+        if (savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_ACTIVE)) {
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
+            // restore action mode data here
+        }
+    }
+    return view;
+}
+
+@Override
+public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    // Save actionMode state. This will internally check if the ActionMode is active
+    // or suspended by calling isActionModeActive or isActionModeSuspended
+    NavigationViewManager.saveActionModeState(outState, this);
+}
+
+@Override
+public void onSuspendActionMode() {
+    if (mActionMode != null) {
+        // save ActionMode state here
+        mActionMode.finish();
+        mActionMode = null;
+        mActionModeSuspended = true;
+    }
+}
+
+@Override
+public void onResumeActionMode() {
+    mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
+    mActionModeSuspended = false;
+    // restore action mode state here
+}
+
+@Override
+public boolean isActionModeActive() {
+    return mActionMode != null;
+}
+
+@Override
+public boolean isActionModeSuspended() {
+    return mActionModeSuspended;
+}
+```
 ## License
 
     Copyright 2016 Rúben Sousa
