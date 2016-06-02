@@ -40,20 +40,14 @@ public void showDefaultItem(NavigationView navigationView) {
 @NonNull
 @Override
 public Fragment createFragment(@IdRes int item) {
-    Fragment fragment = null;
-
     switch (item) {
         case R.id.nav_import:
-            fragment = new ImportFragment();
-            break;
+            return new ImportFragment();
         case R.id.nav_gallery:
-            fragment = new GalleryFragment();
-            break;
+            return new GalleryFragment();
         default:
-            fragment = new DummyFragment();
+            return new DummyFragment();
     }
-    
-    return fragment;
 }
 ```
 
@@ -70,7 +64,7 @@ protected void onCreate(Bundle savedInstanceState) {
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     mNavigationViewManager = new NavigationViewManagerImpl(getSupportFragmentManager(),
-            navigationView, drawer,R.id.containerLayout);
+            navigationView, drawer, R.id.containerLayout);
 
     mNavigationViewManager.init(savedInstanceState, getIntent());
 }
