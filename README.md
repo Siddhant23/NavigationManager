@@ -64,7 +64,7 @@ protected void onCreate(Bundle savedInstanceState) {
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     mNavigationViewManager = new NavigationViewManagerImpl(getSupportFragmentManager(),
-            navigationView, drawer,R.id.containerLayout);
+            navigationView, drawer, R.id.containerLayout);
 
     mNavigationViewManager.init(savedInstanceState, getIntent());
 }
