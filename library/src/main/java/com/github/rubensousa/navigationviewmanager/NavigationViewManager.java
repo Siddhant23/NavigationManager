@@ -163,10 +163,16 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                 Bundle args = mCurrentFragment.getArguments();
                 Bundle extras = mIntent.getExtras();
 
+                // If no arguments were passed to the fragment, the bundle must be created
+                if(args == null){
+                    args = new Bundle();
+                }
+
                 // Add the fragment's arguments to the new Intent
-                if (args != null && extras != null) {
+                if (extras != null) {
                     args.putAll(extras);
                 }
+
                 mCurrentFragment.setArguments(args);
                 mIntent = null;
             }
