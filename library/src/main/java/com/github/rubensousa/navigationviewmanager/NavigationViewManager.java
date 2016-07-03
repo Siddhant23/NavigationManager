@@ -79,7 +79,11 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         } else {
             mIntent = intent;
             if (mIntent == null) {
-                showDefaultItem(mNavigationView);
+                int menuId = getDefaultItem();
+                MenuItem item = mNavigationView.getMenu().findItem(menuId);
+                if (item != null) {
+                    onNavigationItemSelected(item);
+                }
             } else {
                 Bundle args = mIntent.getExtras();
                 if (args != null) {
@@ -89,7 +93,11 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                         onNavigationItemSelected(item);
                     }
                 } else {
-                    showDefaultItem(mNavigationView);
+                    int menuId = getDefaultItem();
+                    MenuItem item = mNavigationView.getMenu().findItem(menuId);
+                    if (item != null) {
+                        onNavigationItemSelected(item);
+                    }
                 }
             }
         }
@@ -105,7 +113,7 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
         mNavigationView.setNavigationItemSelectedListener(null);
     }
 
-    public abstract void showDefaultItem(NavigationView navigationView);
+    public abstract int getDefaultItem();
 
     @NonNull
     public abstract Fragment createFragment(@IdRes int item);
@@ -164,7 +172,7 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                 Bundle extras = mIntent.getExtras();
 
                 // If no arguments were passed to the fragment, the bundle must be created
-                if(args == null){
+                if (args == null) {
                     args = new Bundle();
                 }
 

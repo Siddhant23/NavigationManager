@@ -34,8 +34,8 @@ public class NavigationViewManagerImpl extends NavigationViewManager {
     }
 
     @Override
-    public void showDefaultItem(NavigationView navigationView) {
-        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_import));
+    public int getDefaultItem() {
+        return R.id.nav_import;
     }
 
     @NonNull
