@@ -185,7 +185,7 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                 mIntent = null;
             }
 
-            createFragmentTransaction(mCurrentFragment).commit();
+            commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
             return true;
         }
 
@@ -268,6 +268,10 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
     public FragmentTransaction createFragmentTransaction(Fragment fragment) {
         return mFragmentManager.beginTransaction()
                 .replace(mContainerId, fragment, CURRENT_TITLE);
+    }
+
+    public void commitFragmentTransaction(FragmentTransaction transaction) {
+        transaction.commit();
     }
 
     public boolean openDrawer() {

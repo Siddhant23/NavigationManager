@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 
 import com.github.rubensousa.navigationviewmanager.NavigationViewManager;
@@ -64,4 +65,9 @@ public class NavigationViewManagerImpl extends NavigationViewManager {
                 .addToBackStack(null);
     }*/
 
+    /* Override this to specify the away to commit the transaction
+    @Override
+    public void commitFragmentTransaction(FragmentTransaction transaction) {
+        transaction.commit()
+    }*/
 }
