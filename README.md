@@ -17,7 +17,7 @@ repositories{
 }
 
 dependencies {
-    compile 'com.github.rubensousa:NavigationViewManager:0.4'
+    compile 'com.github.rubensousa:NavigationViewManager:0.5'
 }
 ```
 
@@ -25,12 +25,12 @@ dependencies {
 
 #####1. Create your NavigationViewManagerImpl class that extends from NavigationViewManager.
 
-#####2. Implement showDefaultItem to show a default fragment on first start.
+#####2. Implement getDefaultItem to show a default fragment on first start.
 
 ```java
 @Override
-public void showDefaultItem(NavigationView navigationView) {
-    onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_import));
+public int getDefaultItem() {
+    return R.id.nav_import;
 }
 ```
 
@@ -107,7 +107,9 @@ mNavigationViewManager.navigateWithIntent(intent);
 
 The intent will be automatically passed to your fragment
 
-##### 6. (Optional) Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
+### Optional Usage
+
+##### 1. Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
 
 ```java
 @Override
@@ -125,6 +127,16 @@ public FragmentTransaction createFragmentTransaction(Fragment fragment) {
             .replace(mContainerId, fragment, CURRENT_TITLE);
 }
 ```
+##### 2. Override commitFragmentTransaction(FragmentTransaction)
+
+The default commit is:
+
+```java
+public void commitFragmentTransaction(FragmentTransaction transaction) {
+    transaction.commit();
+}
+```
+
 ## ActionMode pausing/resuming
 
 When the NavigationView opens, you should finish or at least pause the ActionMode.
