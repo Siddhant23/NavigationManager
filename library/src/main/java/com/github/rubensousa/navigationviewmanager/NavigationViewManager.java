@@ -89,14 +89,26 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                 if (args != null) {
                     int menuId = args.getInt(NAVIGATE_ID);
                     MenuItem item = mNavigationView.getMenu().findItem(menuId);
-                    if (item != null) {
+                    if (item != null && menuId != 0) {
                         onNavigationItemSelected(item);
+                    }else{
+                        menuId = getDefaultItem();
+                        item = mNavigationView.getMenu().findItem(menuId);
+                        if(item != null){
+                            onNavigationItemSelected(item);
+                        }
                     }
                 } else {
                     int menuId = getDefaultItem();
                     MenuItem item = mNavigationView.getMenu().findItem(menuId);
                     if (item != null) {
                         onNavigationItemSelected(item);
+                    }else{
+                        menuId = getDefaultItem();
+                        item = mNavigationView.getMenu().findItem(menuId);
+                        if(item != null){
+                            onNavigationItemSelected(item);
+                        }
                     }
                 }
             }
