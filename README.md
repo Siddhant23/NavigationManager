@@ -17,7 +17,7 @@ repositories{
 }
 
 dependencies {
-    compile 'com.github.rubensousa:NavigationViewManager:0.5'
+    compile 'com.github.rubensousa:NavigationViewManager:0.6'
 }
 ```
 
