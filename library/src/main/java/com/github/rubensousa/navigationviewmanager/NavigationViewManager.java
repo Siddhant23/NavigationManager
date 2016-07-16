@@ -91,10 +91,10 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                     MenuItem item = mNavigationView.getMenu().findItem(menuId);
                     if (item != null && menuId != 0) {
                         onNavigationItemSelected(item);
-                    }else{
+                    } else {
                         menuId = getDefaultItem();
                         item = mNavigationView.getMenu().findItem(menuId);
-                        if(item != null){
+                        if (item != null) {
                             onNavigationItemSelected(item);
                         }
                     }
@@ -103,10 +103,10 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
                     MenuItem item = mNavigationView.getMenu().findItem(menuId);
                     if (item != null) {
                         onNavigationItemSelected(item);
-                    }else{
+                    } else {
                         menuId = getDefaultItem();
                         item = mNavigationView.getMenu().findItem(menuId);
-                        if(item != null){
+                        if (item != null) {
                             onNavigationItemSelected(item);
                         }
                     }
@@ -175,7 +175,7 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
         // If an item is checkable, then a fragment should be used
         if (item.isCheckable()) {
-            item.setChecked(true);
+            mNavigationView.setCheckedItem(mCurrentId);
             mCurrentFragment = createFragment(item.getItemId());
 
             // Check if we have an Intent to pass to the fragment
