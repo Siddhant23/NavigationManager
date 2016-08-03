@@ -149,10 +149,10 @@ public abstract class NavigationViewManager implements NavigationView.OnNavigati
 
     public void navigate(@IdRes int menuId) {
         if (mCurrentId != menuId) {
-            MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
-            lastItem.setChecked(false);
             MenuItem newItem = mNavigationView.getMenu().findItem(menuId);
             if (newItem != null) {
+                MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
+                lastItem.setChecked(false);
                 onNavigationItemSelected(newItem);
             }
         }
