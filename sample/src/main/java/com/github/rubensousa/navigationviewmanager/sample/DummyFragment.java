@@ -31,11 +31,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.github.rubensousa.navigationviewmanager.NavigationViewManager;
+import com.github.rubensousa.navigationmanager.NavigationManager;
 
 
 public class DummyFragment extends Fragment
-        implements NavigationViewManager.ActionModeListener, View.OnClickListener,
+        implements NavigationManager.ActionModeListener, View.OnClickListener,
         ActionMode.Callback {
 
     public static final String TITLE = "title";
@@ -75,9 +75,9 @@ public class DummyFragment extends Fragment
 
         if (savedInstanceState != null) {
             mActionModeSuspended
-                    = savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_SUSPENDED);
+                    = savedInstanceState.getBoolean(NavigationManager.ACTION_MODE_SUSPENDED);
 
-            if (savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_ACTIVE)) {
+            if (savedInstanceState.getBoolean(NavigationManager.ACTION_MODE_ACTIVE)) {
                 // restore action mode data here
                 mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
             }
@@ -88,7 +88,7 @@ public class DummyFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        NavigationViewManager.saveActionModeState(outState, this);
+        NavigationManager.saveActionModeState(outState, this);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class DummyFragment extends Fragment
 
         if (v.getId() == R.id.intentButton) {
             // Change navigation fragments with a custom intent as argument
-            Intent intent = NavigationViewManager.createNavigationIntent(R.id.nav_import);
+            Intent intent = NavigationManager.createNavigationIntent(R.id.nav_import);
             intent.putExtra("argument", "dummy");
             ((MainActivity) getActivity()).navigateWithIntent(intent);
         }

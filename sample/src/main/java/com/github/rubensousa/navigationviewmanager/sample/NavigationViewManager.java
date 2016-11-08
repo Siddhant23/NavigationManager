@@ -22,15 +22,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 
-import com.github.rubensousa.navigationviewmanager.NavigationViewManager;
+import com.github.rubensousa.navigationmanager.NavigationManager;
 
-public class NavigationViewManagerImpl extends NavigationViewManager {
+public class NavigationViewManager extends NavigationManager {
 
-    public NavigationViewManagerImpl(FragmentManager fragmentManager, NavigationView navigationView,
-                                     DrawerLayout drawerLayout, @IdRes int containerId) {
+    public NavigationViewManager(FragmentManager fragmentManager, NavigationView navigationView,
+                                 DrawerLayout drawerLayout, @IdRes int containerId) {
         super(fragmentManager, navigationView, drawerLayout, containerId);
     }
 
