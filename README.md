@@ -1,4 +1,4 @@
-# NavigationViewManager
+# NavigationManager
 A simple helper library to separate navigation logic from your MainActivity and reduce boilerplate.
 
 It also includes ActionMode flow control when the NavigationView is shown/hidden.
