@@ -68,11 +68,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         } else {
             mIntent = intent;
             if (mIntent == null) {
-                int menuId = getDefaultItem();
-                MenuItem item = mNavigationView.getMenu().findItem(menuId);
-                if (item != null) {
-                    onNavigationItemSelected(item);
-                }
+                navigate(getDefaultItem());
             } else {
                 Bundle args = mIntent.getExtras();
                 if (args != null) {
@@ -80,25 +76,11 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
                     MenuItem item = mNavigationView.getMenu().findItem(menuId);
                     if (item != null && menuId != 0) {
                         onNavigationItemSelected(item);
-                    } else {
-                        menuId = getDefaultItem();
-                        item = mNavigationView.getMenu().findItem(menuId);
-                        if (item != null) {
-                            onNavigationItemSelected(item);
-                        }
+                    } else {  // If the intent doesn't have a valid navigate id, open default item
+                        navigate(getDefaultItem());
                     }
-                } else {
-                    int menuId = getDefaultItem();
-                    MenuItem item = mNavigationView.getMenu().findItem(menuId);
-                    if (item != null) {
-                        onNavigationItemSelected(item);
-                    } else {
-                        menuId = getDefaultItem();
-                        item = mNavigationView.getMenu().findItem(menuId);
-                        if (item != null) {
-                            onNavigationItemSelected(item);
-                        }
-                    }
+                } else { // If the intent doesn't have extras, navigate to the default item
+                    navigate(getDefaultItem());
                 }
             }
         }
@@ -136,7 +118,9 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
             MenuItem newItem = mNavigationView.getMenu().findItem(menuId);
             if (newItem != null) {
                 MenuItem lastItem = mNavigationView.getMenu().findItem(mCurrentId);
-                lastItem.setChecked(false);
+                if (lastItem != null) {
+                    lastItem.setChecked(false);
+                }
                 onNavigationItemSelected(newItem);
             }
         }
