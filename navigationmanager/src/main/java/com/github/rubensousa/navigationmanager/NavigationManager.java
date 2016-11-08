@@ -120,11 +120,6 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         outState.putString(CURRENT_TITLE, mTitle);
     }
 
-    public void onDestroy() {
-        mDrawerLayout.removeDrawerListener(this);
-        mNavigationView.setNavigationItemSelectedListener(null);
-    }
-
     public abstract int getDefaultItem();
 
     @NonNull

@@ -57,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        mNavigationManager.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
         if (!mNavigationManager.closeDrawer()) {
             super.onBackPressed();
