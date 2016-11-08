@@ -179,6 +179,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
             if (!shouldDelayTransaction(mCurrentId) || firstStart) {
                 commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
             } else {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mFragmentTransaction = createFragmentTransaction(mCurrentFragment);
             }
             return true;
@@ -235,6 +236,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         if (mFragmentTransaction != null && shouldDelayTransaction(mCurrentId)) {
             commitFragmentTransaction(mFragmentTransaction);
             mFragmentTransaction = null;
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
 
