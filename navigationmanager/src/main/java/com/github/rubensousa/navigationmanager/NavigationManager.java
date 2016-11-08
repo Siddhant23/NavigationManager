@@ -92,7 +92,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         outState.putString(CURRENT_TITLE, mTitle);
     }
 
-    public boolean shouldDelayTransaction() {
+    public boolean shouldDelayTransaction(int item) {
         return true;
     }
 
@@ -176,7 +176,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
                 mIntent = null;
             }
 
-            if (!shouldDelayTransaction() || firstStart) {
+            if (!shouldDelayTransaction(mCurrentId) || firstStart) {
                 commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
             } else {
                 mFragmentTransaction = createFragmentTransaction(mCurrentFragment);
@@ -232,7 +232,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
             }
         }
 
-        if (mFragmentTransaction != null && shouldDelayTransaction()) {
+        if (mFragmentTransaction != null && shouldDelayTransaction(mCurrentId)) {
             commitFragmentTransaction(mFragmentTransaction);
             mFragmentTransaction = null;
         }
