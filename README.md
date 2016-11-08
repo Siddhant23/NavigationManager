@@ -12,10 +12,6 @@ Check the sample app.
 Add the following to your build.gradle:
 
 ```groovy
-repositories{
-    maven { url "https://dl.bintray.com/rubensousa/maven" }
-}
-
 dependencies {
     compile 'com.github.rubensousa:navigationmanager:1.1'
 }
