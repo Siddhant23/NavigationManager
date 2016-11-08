@@ -43,6 +43,7 @@ public class DummyFragment extends Fragment
     private String mTitle;
     private ActionMode mActionMode;
     private boolean mActionModeSuspended = false;
+    private View mContentView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class DummyFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        mContentView = view.findViewById(R.id.contentLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         TextView textView = (TextView) view.findViewById(R.id.textView);
         view.findViewById(R.id.actionModeButton).setOnClickListener(this);
@@ -81,8 +83,25 @@ public class DummyFragment extends Fragment
                 // restore action mode data here
                 mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
             }
+        } else {
+            mContentView.setAlpha(0);
         }
         return view;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        mContentView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mContentView != null) {
+                    mContentView.animate().setDuration(200).alpha(1);
+                }
+            }
+        });
+
     }
 
     @Override

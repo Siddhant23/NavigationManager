@@ -150,6 +150,11 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         // If an item is checkable, then a fragment should be used
         if (item.isCheckable()) {
             mNavigationView.setCheckedItem(mCurrentId);
+
+            if (mNavigationListener != null && mCurrentFragment != null) {
+                mNavigationListener.onSectionChange(mCurrentFragment);
+            }
+
             mCurrentFragment = createFragment(item.getItemId());
 
             // Check if we have an Intent to pass to the fragment
@@ -265,8 +270,6 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
     }
 
     public void commitFragmentTransaction(FragmentTransaction transaction) {
-        // Since we're now committing the transaction
-        // after the drawer closes, we can use commit now.
         // We can allow state loss because
         // the fragment will start for the first time
         transaction.commitAllowingStateLoss();
@@ -301,6 +304,8 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
 
     public interface NavigationListener {
         void onItemSelected(MenuItem item);
+
+        void onSectionChange(Fragment currentFragment);
     }
 
     public interface ActionModeListener {

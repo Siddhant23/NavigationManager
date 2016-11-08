@@ -20,14 +20,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.github.rubensousa.navigationmanager.NavigationManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationManager.NavigationListener {
 
     private NavigationManager mNavigationManager;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationManager = new NavigationViewManager(getSupportFragmentManager(),
                 navigationView, drawer, R.id.frameLayout);
 
+        mNavigationManager.setNavigationListener(this);
         mNavigationManager.init(savedInstanceState, getIntent());
     }
 
@@ -80,5 +83,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void navigate(@IdRes int menuId) {
         mNavigationManager.navigate(menuId);
+    }
+
+    @Override
+    public void onItemSelected(MenuItem item) {
+
+    }
+
+    @Override
+    public void onSectionChange(Fragment currentFragment) {
+        // Only called when the user changes sections
+        // We can use this to fade the current fragment's view, for example
+        View view = currentFragment.getView();
+        if (view != null) {
+            View contentLayout = view.findViewById(R.id.contentLayout);
+            if (contentLayout != null) {
+                contentLayout.animate().setDuration(200).alpha(0);
+            }
+        }
     }
 }
