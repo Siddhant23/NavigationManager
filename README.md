@@ -13,17 +13,17 @@ Add the following to your build.gradle:
 
 ```groovy
 repositories{
-    maven { url "https://jitpack.io" }
+    maven { url "https://dl.bintray.com/rubensousa/maven" }
 }
 
 dependencies {
-    compile 'com.github.rubensousa:NavigationViewManager:1.0'
+    compile 'com.github.rubensousa:navigationmanager:1.1'
 }
 ```
 
 ## How to use
 
-#####1. Create your NavigationViewManagerImpl class that extends from NavigationViewManager.
+#####1. Create your NavigationViewManager class that extends from NavigationManager.
 
 #####2. Implement getDefaultItem to show a default fragment on first start.
 
@@ -84,12 +84,6 @@ protected void onSaveInstanceState(Bundle outState) {
 }
 
 @Override
-protected void onDestroy() {
-    mNavigationViewManager.onDestroy();
-    super.onDestroy();
-}
-
-@Override
 public void onBackPressed() {
     if (!mNavigationViewManager.closeDrawer()) {
         super.onBackPressed();
@@ -111,14 +105,6 @@ The intent will be automatically passed to your fragment
 
 ##### 1. Override createFragmentTransaction(Fragment fragment) to create your own FragmentTransactions
 
-```java
-@Override
-public FragmentTransaction createFragmentTransaction(Fragment fragment) {
-    return mFragmentManager.beginTransaction()
-            .replace(R.id.frameLayout,fragment,CURRENT_TITLE)
-            .addToBackStack(null);
-}
-```
 The default transaction is:
 
 ```java
@@ -133,9 +119,11 @@ The default commit is:
 
 ```java
 public void commitFragmentTransaction(FragmentTransaction transaction) {
-    transaction.commit();
+    // We can allow state loss because the fragment will start for the first time
+    transaction.commitAllowingStateLoss();
 }
 ```
+##### 3. Override shouldDelayTransaction to enable/disable the delay between switching fragments
 
 ## ActionMode pausing/resuming
 

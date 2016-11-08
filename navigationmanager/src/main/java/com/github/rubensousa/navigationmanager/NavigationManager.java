@@ -270,8 +270,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
     }
 
     public void commitFragmentTransaction(FragmentTransaction transaction) {
-        // We can allow state loss because
-        // the fragment will start for the first time
+        // We can allow state loss because the fragment will start for the first time
         transaction.commitAllowingStateLoss();
     }
 
