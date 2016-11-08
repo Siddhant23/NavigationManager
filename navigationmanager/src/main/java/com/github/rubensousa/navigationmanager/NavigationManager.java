@@ -18,7 +18,6 @@ package com.github.rubensousa.navigationmanager;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -29,8 +28,6 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 public abstract class NavigationManager implements NavigationView.OnNavigationItemSelectedListener,
@@ -61,14 +58,6 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         mContainerId = containerId;
         mDrawerLayout.addDrawerListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
-    }
-
-    public void setupDrawerToggle(AppCompatActivity activity, @StringRes int openDrawerRes,
-                                  @StringRes int closeDrawerRes) {
-
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout,
-                null, openDrawerRes, closeDrawerRes);
-        drawerToggle.syncState();
     }
 
     public void init(Bundle savedInstanceState, Intent intent) {
