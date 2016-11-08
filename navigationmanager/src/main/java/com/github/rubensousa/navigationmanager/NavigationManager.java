@@ -43,6 +43,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
     private DrawerLayout mDrawerLayout;
     private NavigationListener mNavigationListener;
     private ActionModeListener mActionModeListener;
+    private FragmentTransaction mFragmentTransaction;
     private FragmentManager mFragmentManager;
     private Intent mIntent;
     private Fragment mCurrentFragment;
@@ -91,6 +92,10 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         outState.putString(CURRENT_TITLE, mTitle);
     }
 
+    public boolean shouldDelayTransaction() {
+        return true;
+    }
+
     public abstract int getDefaultItem();
 
     @NonNull
@@ -133,6 +138,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         }
 
         closeDrawer();
+        boolean firstStart = mCurrentId == 0;
 
         if (item.getItemId() == mCurrentId) {
             return false;
@@ -165,7 +171,11 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
                 mIntent = null;
             }
 
-            commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
+            if (!shouldDelayTransaction() || firstStart) {
+                commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
+            } else {
+                mFragmentTransaction = createFragmentTransaction(mCurrentFragment);
+            }
             return true;
         }
 
@@ -217,6 +227,10 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
             }
         }
 
+        if (mFragmentTransaction != null && shouldDelayTransaction()) {
+            commitFragmentTransaction(mFragmentTransaction);
+            mFragmentTransaction = null;
+        }
     }
 
     @Override
@@ -251,7 +265,11 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
     }
 
     public void commitFragmentTransaction(FragmentTransaction transaction) {
-        transaction.commit();
+        // Since we're now committing the transaction
+        // after the drawer closes, we can use commit now.
+        // We can allow state loss because
+        // the fragment will start for the first time
+        transaction.commitAllowingStateLoss();
     }
 
     public boolean openDrawer() {
