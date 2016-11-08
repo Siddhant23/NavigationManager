@@ -23,7 +23,7 @@ dependencies {
 
 ## How to use
 
-#####1. Create your NavigationViewManager class that extends from NavigationManager.
+#####1. Create your NavigationManager class that extends from NavigationManager.
 
 #####2. Implement getDefaultItem to show a default fragment on first start.
 
@@ -54,7 +54,7 @@ public Fragment createFragment(@IdRes int item) {
 #####4. Add the following to your MainActivity:
 
 ```java
-private NavigationViewManager mNavigationViewManager;
+private NavigationManager mNavigationManager;
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +63,10 @@ protected void onCreate(Bundle savedInstanceState) {
     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-    mNavigationViewManager = new NavigationViewManagerImpl(getSupportFragmentManager(),
+    mNavigationManager = new NavigationViewManager(getSupportFragmentManager(),
             navigationView, drawer, R.id.containerLayout);
 
-    mNavigationViewManager.init(savedInstanceState, getIntent());
+    mNavigationManager.init(savedInstanceState, getIntent());
 }
 
 // This is useful to navigate when you receive an intent
@@ -74,18 +74,18 @@ protected void onCreate(Bundle savedInstanceState) {
 @Override
 protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    mNavigationViewManager.navigateWithIntent(intent);
+    mNavigationManager.navigateWithIntent(intent);
 }
 
 @Override
 protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    mNavigationViewManager.onSaveInstanceState(outState);
+    mNavigationManager.onSaveInstanceState(outState);
 }
 
 @Override
 public void onBackPressed() {
-    if (!mNavigationViewManager.closeDrawer()) {
+    if (!mNavigationManager.closeDrawer()) {
         super.onBackPressed();
     }
 }
@@ -94,9 +94,9 @@ public void onBackPressed() {
 ##### 5. To navigate with Intents:
 
 ```java
-Intent intent = NavigationViewManager.createNavigationIntent(R.id.menuId);
+Intent intent = NavigationManager.createNavigationIntent(R.id.menuId);
 intent.putExtra("argument", "dummy");
-mNavigationViewManager.navigateWithIntent(intent);
+mNavigationManager.navigateWithIntent(intent);
 ```
 
 The intent will be automatically passed to your fragment
@@ -128,7 +128,7 @@ public void commitFragmentTransaction(FragmentTransaction transaction) {
 ## ActionMode pausing/resuming
 
 When the NavigationView opens, you should finish or at least pause the ActionMode.
-To do this, you can implement NavigationViewManager.ActionModeListener in your fragments and then:
+To do this, you can implement NavigationManager.ActionModeListener in your fragments and then:
 
 ```java
 private ActionMode mActionMode;
@@ -141,10 +141,10 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle sa
     
     if (savedInstanceState != null) {
         mActionModeSuspended
-                = savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_SUSPENDED);
+                = savedInstanceState.getBoolean(NavigationManager.ACTION_MODE_SUSPENDED);
 
         // Restore action mode state if it was active before
-        if (savedInstanceState.getBoolean(NavigationViewManager.ACTION_MODE_ACTIVE)) {
+        if (savedInstanceState.getBoolean(NavigationManager.ACTION_MODE_ACTIVE)) {
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(this);
             // restore action mode data here
         }
@@ -157,7 +157,7 @@ public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     // Save actionMode state. This will internally check if the ActionMode is active
     // or suspended by calling isActionModeActive or isActionModeSuspended
-    NavigationViewManager.saveActionModeState(outState, this);
+    NavigationManager.saveActionModeState(outState, this);
 }
 
 @Override
