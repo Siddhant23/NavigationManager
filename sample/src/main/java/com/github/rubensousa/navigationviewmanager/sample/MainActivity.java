@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationManager
 
     @Override
     public void onItemSelected(MenuItem item) {
-
     }
 
     @Override
