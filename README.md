@@ -13,7 +13,7 @@ Add the following to your build.gradle:
 
 ```groovy
 dependencies {
-    compile 'com.github.rubensousa:navigationmanager:1.2'
+    compile 'com.github.rubensousa:navigationmanager:1.2.1'
 }
 ```
 
