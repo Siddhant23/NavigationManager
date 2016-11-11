@@ -50,6 +50,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
     private int mContainerId;
     private int mCurrentId;
     private String mTitle;
+    private boolean mNavigating;
 
     public NavigationManager(FragmentManager fragmentManager, NavigationView navigationView,
                              DrawerLayout drawerLayout, @IdRes int containerId) {
@@ -126,6 +127,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
                 if (lastItem != null) {
                     lastItem.setChecked(false);
                 }
+                mNavigating = true;
                 onNavigationItemSelected(newItem);
             }
         }
@@ -141,6 +143,7 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
         boolean firstStart = mCurrentId == 0;
 
         if (item.getItemId() == mCurrentId) {
+            mNavigating = false;
             return false;
         }
 
@@ -176,15 +179,17 @@ public abstract class NavigationManager implements NavigationView.OnNavigationIt
                 mIntent = null;
             }
 
-            if (!shouldDelayTransaction(mCurrentId) || firstStart) {
+            if (!shouldDelayTransaction(mCurrentId) || firstStart || mNavigating) {
                 commitFragmentTransaction(createFragmentTransaction(mCurrentFragment));
             } else {
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mFragmentTransaction = createFragmentTransaction(mCurrentFragment);
             }
+            mNavigating = false;
             return true;
         }
 
+        mNavigating = false;
         return false;
     }
 
