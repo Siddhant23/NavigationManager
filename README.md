@@ -183,6 +183,10 @@ public boolean isActionModeSuspended() {
     return mActionModeSuspended;
 }
 ```
+## Apps using NavigationManager (Send a PR to add your app here)
+
+- [EuroMillions](https://play.google.com/store/apps/details?id=io.github.rubensousa.euromillions)
+
 ## License
 
     Copyright 2016 Rúben Sousa
